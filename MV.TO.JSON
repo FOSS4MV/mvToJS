@@ -26,9 +26,16 @@
 * formatted JSON array (JSON.ARRAY).  This code only formats the dynamic array
 * to JSON.  To Ensure your array is valid JSON, your own code must consider
 * escaping string values such as quotations marks, slashes, backslashes, etc.
+
 * This code is most suited for use in subroutines or functions.
 * The code has only been tested with D3, but should be generic enough to work
 * on most any MV platform
+
+FORCE.THREE.DIMENSIONS = 1
+* (0/1) Force output of a 3 dimensional JSON array. e.g. array[][][]
+* Useful for emulating MV data model in JSON. i.e. REC<ATTR,VALUE,SUBVALUE>.
+* This makes it easier to write JavaScript functions that interate over the
+* data in a consistent fasion.
 
 MAX.ATTRIBUTES = DCOUNT(DYN.ARRAY, @AM)
 JSON.ARRAY = '['
@@ -43,7 +50,7 @@ FOR A.POS = 1 TO MAX.ATTRIBUTES
 		IF V.POS > 1 THEN JSON.ARRAY := ', '
 		MAX.SUBVALUES = DCOUNT(V.VALUE, @SVM)
 		IF MAX.SUBVALUES = 0 THEN MAX.SUBVALUES = 1
-		IF MAX.SUBVALUES > 1 THEN
+		IF MAX.SUBVALUES > 1 OR FORCE.THREE.DIMENSIONS THEN
 			IF MAX.VALUES = 1 THEN JSON.ARRAY := '['
 			JSON.ARRAY := '['
 		END
@@ -56,7 +63,7 @@ FOR A.POS = 1 TO MAX.ATTRIBUTES
 				JSON.ARRAY := '"':S.VALUE:'"'
 			END
 		NEXT S.POS
-		IF MAX.SUBVALUES > 1 THEN
+		IF MAX.SUBVALUES > 1 OR FORCE.THREE.DIMENSIONS THEN
 			JSON.ARRAY := ']'
 			IF MAX.VALUES = 1 THEN JSON.ARRAY := ']'
 		END
