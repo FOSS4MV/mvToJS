@@ -22,52 +22,52 @@
 *
 * End of License --------------------------------------------------------------
 
-* MV.TO.JSON will convet a given dynamic array (DYN.ARRAY) to a correctly
-* formatted JSON array (JSON.ARRAY).  This code only formats the dynamic array
-* to JSON.  To Ensure your array is valid JSON, your own code must consider
+* MV.TO.JS will convet a given dynamic array to a correctly formatted 
+* JavaScript array.  This code only formats the dynamic array to JavaScript.
+* To Ensure your array data is valid in JavaScript, your own code must consider
 * escaping string values such as quotations marks, slashes, backslashes, etc.
 
-* This code is most suited for use in subroutines or functions.
 * The code has only been tested with D3, but should be generic enough to work
 * on most any MV platform
 
 FORCE.THREE.DIMENSIONS = 1
-* (0/1) Force output of a 3 dimensional JSON array. e.g. array[][][]
-* Useful for emulating MV data model in JSON. i.e. REC<ATTR,VALUE,SUBVALUE>.
-* This makes it easier to write JavaScript functions that interate over the
-* data in a consistent fasion.
+
+* (0/1) Force output of a 3 dimensional JavaScript array. e.g. array[][][]
+* This is useful for emulating MV dynamic array data model in JavaScript.
+* i.e. REC<ATTR,VALUE,SUBVALUE>. This makes it easier to write JavaScript
+* functions that interate over the data in a consistent fasion.
 
 MAX.ATTRIBUTES = DCOUNT(DYN.ARRAY, @AM)
-JSON.ARRAY = '['
+JS.ARRAY = '['
 FOR A.POS = 1 TO MAX.ATTRIBUTES
-	IF A.POS > 1 THEN JSON.ARRAY := ', '
+	IF A.POS > 1 THEN JS.ARRAY := ', '
 	A.VALUE = DYN.ARRAY<A.POS>
 	MAX.VALUES = DCOUNT(A.VALUE, @VM)
 	IF MAX.VALUES = 0 THEN MAX.VALUES = 1
-	IF MAX.VALUES > 1 THEN JSON.ARRAY := '['
+	IF MAX.VALUES > 1 THEN JS.ARRAY := '['
 	FOR V.POS = 1 TO MAX.VALUES
 		V.VALUE = A.VALUE<1,V.POS>
-		IF V.POS > 1 THEN JSON.ARRAY := ', '
+		IF V.POS > 1 THEN JS.ARRAY := ', '
 		MAX.SUBVALUES = DCOUNT(V.VALUE, @SVM)
 		IF MAX.SUBVALUES = 0 THEN MAX.SUBVALUES = 1
 		IF MAX.SUBVALUES > 1 OR FORCE.THREE.DIMENSIONS THEN
-			IF MAX.VALUES = 1 THEN JSON.ARRAY := '['
-			JSON.ARRAY := '['
+			IF MAX.VALUES = 1 THEN JS.ARRAY := '['
+			JS.ARRAY := '['
 		END
 		FOR S.POS = 1 TO MAX.SUBVALUES
-			IF S.POS > 1 THEN JSON.ARRAY := ', '
+			IF S.POS > 1 THEN JS.ARRAY := ', '
 			S.VALUE = V.VALUE<1,1,S.POS>
 			IF S.VALUE # '' AND NUM(S.VALUE) THEN
-				JSON.ARRAY := S.VALUE
+				JS.ARRAY := S.VALUE
 			END ELSE
-				JSON.ARRAY := '"':S.VALUE:'"'
+				JS.ARRAY := '"':S.VALUE:'"'
 			END
 		NEXT S.POS
 		IF MAX.SUBVALUES > 1 OR FORCE.THREE.DIMENSIONS THEN
-			JSON.ARRAY := ']'
-			IF MAX.VALUES = 1 THEN JSON.ARRAY := ']'
+			JS.ARRAY := ']'
+			IF MAX.VALUES = 1 THEN JS.ARRAY := ']'
 		END
 	NEXT V.POS
-	IF MAX.VALUES > 1 THEN JSON.ARRAY := ']'
+	IF MAX.VALUES > 1 THEN JS.ARRAY := ']'
 NEXT A.POS
-JSON.ARRAY := ']'
+JS.ARRAY := ']'
