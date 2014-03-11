@@ -1,6 +1,6 @@
 * The MIT License (MIT)
 *
-* Copyright (c) 2014 Kevin Powick
+* MV.TO.JS Copyright (c) 2014 Kevin Powick
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,13 @@
 *
 * End of License --------------------------------------------------------------
 
-* MV.TO.JS will convet a given dynamic array to a correctly formatted 
+* Version 1.0.0 - March 2014
+*
+* MV.TO.JS will convet a given dynamic array to a correctly formatted
 * JavaScript array.  This code only formats the dynamic array to JavaScript.
 * To Ensure your array data is valid in JavaScript, your own code must consider
 * escaping string values such as quotations marks, slashes, backslashes, etc.
-
+*
 * The code has only been tested with D3, but should be generic enough to work
 * on most any MV platform
 
@@ -40,34 +42,34 @@ FORCE.THREE.DIMENSIONS = 1
 MAX.ATTRIBUTES = DCOUNT(DYN.ARRAY, @AM)
 JS.ARRAY = '['
 FOR A.POS = 1 TO MAX.ATTRIBUTES
-	IF A.POS > 1 THEN JS.ARRAY := ', '
-	A.VALUE = DYN.ARRAY<A.POS>
-	MAX.VALUES = DCOUNT(A.VALUE, @VM)
-	IF MAX.VALUES = 0 THEN MAX.VALUES = 1
-	IF MAX.VALUES > 1 THEN JS.ARRAY := '['
-	FOR V.POS = 1 TO MAX.VALUES
-		V.VALUE = A.VALUE<1,V.POS>
-		IF V.POS > 1 THEN JS.ARRAY := ', '
-		MAX.SUBVALUES = DCOUNT(V.VALUE, @SVM)
-		IF MAX.SUBVALUES = 0 THEN MAX.SUBVALUES = 1
-		IF MAX.SUBVALUES > 1 OR FORCE.THREE.DIMENSIONS THEN
-			IF MAX.VALUES = 1 THEN JS.ARRAY := '['
-			JS.ARRAY := '['
-		END
-		FOR S.POS = 1 TO MAX.SUBVALUES
-			IF S.POS > 1 THEN JS.ARRAY := ', '
-			S.VALUE = V.VALUE<1,1,S.POS>
-			IF S.VALUE # '' AND NUM(S.VALUE) THEN
-				JS.ARRAY := S.VALUE
-			END ELSE
-				JS.ARRAY := '"':S.VALUE:'"'
-			END
-		NEXT S.POS
-		IF MAX.SUBVALUES > 1 OR FORCE.THREE.DIMENSIONS THEN
-			JS.ARRAY := ']'
-			IF MAX.VALUES = 1 THEN JS.ARRAY := ']'
-		END
-	NEXT V.POS
-	IF MAX.VALUES > 1 THEN JS.ARRAY := ']'
+   IF A.POS > 1 THEN JS.ARRAY := ', '
+   A.VALUE = DYN.ARRAY<A.POS>
+   MAX.VALUES = DCOUNT(A.VALUE, @VM)
+   IF MAX.VALUES = 0 THEN MAX.VALUES = 1
+   IF MAX.VALUES > 1 THEN JS.ARRAY := '['
+   FOR V.POS = 1 TO MAX.VALUES
+      V.VALUE = A.VALUE<1,V.POS>
+      IF V.POS > 1 THEN JS.ARRAY := ', '
+      MAX.SUBVALUES = DCOUNT(V.VALUE, @SVM)
+      IF MAX.SUBVALUES = 0 THEN MAX.SUBVALUES = 1
+      IF MAX.SUBVALUES > 1 OR FORCE.THREE.DIMENSIONS THEN
+         IF MAX.VALUES = 1 THEN JS.ARRAY := '['
+         JS.ARRAY := '['
+      END
+      FOR S.POS = 1 TO MAX.SUBVALUES
+         IF S.POS > 1 THEN JS.ARRAY := ', '
+         S.VALUE = V.VALUE<1,1,S.POS>
+         IF S.VALUE # '' AND NUM(S.VALUE) THEN
+            JS.ARRAY := S.VALUE
+         END ELSE
+            JS.ARRAY := '"':S.VALUE:'"'
+         END
+      NEXT S.POS
+      IF MAX.SUBVALUES > 1 OR FORCE.THREE.DIMENSIONS THEN
+         JS.ARRAY := ']'
+         IF MAX.VALUES = 1 THEN JS.ARRAY := ']'
+      END
+   NEXT V.POS
+   IF MAX.VALUES > 1 THEN JS.ARRAY := ']'
 NEXT A.POS
 JS.ARRAY := ']'
