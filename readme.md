@@ -1,4 +1,4 @@
-#MV.TO.JS
+# MV.TO.JS
 
 Use this little code snippet in your subroutines or functions to convert a given dynamic array to a correctly formatted JavaScript array.
 
